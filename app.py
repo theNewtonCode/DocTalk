@@ -1,8 +1,32 @@
 import os
 import shutil
 from flask import Flask, render_template, request
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM 
+from transformers import pipeline
+import torch 
+from langchain.document_loaders import PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter 
+from langchain.embeddings import SentenceTransformerEmbeddings 
+from langchain.vectorstores import Chroma 
+from langchain.llms import HuggingFacePipeline
+from langchain.chains import RetrievalQA 
+
+
 
 app = Flask(__name__)
+
+
+device = torch.device('cpu')
+
+checkpoint = "LaMini-T5-738M"
+
+print(f"Checkpoint path: {checkpoint}")  
+tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+base_model = AutoModelForSeq2SeqLM.from_pretrained(
+    checkpoint,
+    torch_dtype=torch.float32
+)
+
 
 @app.route('/')
 def index():
@@ -49,6 +73,36 @@ def upload():
         return 'File uploaded successfully'
     else:
         return 'Invalid file format. Please upload a PDF file.'
+    
+@app.route('/ask-doc')
+def ask_doc():
+    try:
+        for root, dirs, files in os.walk("docs"):
+            for file in files:
+                if file.endswith(".pdf"):
+                    print(file)
+                    loader = PyPDFLoader(os.path.join(root, file))
+        documents = loader.load()
+        print("splitting into chunks")
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
+        texts = text_splitter.split_documents(documents)
+        # create embeddings here
+        print("Loading sentence transformers model")
+        embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+        # create vector store here
+        print(f"Creating embeddings. May take some minutes...")
+
+        db = Chroma.from_documents(texts, embeddings, persist_directory="vector_db_main")
+
+        print(f"Ingestion complete! You can now run privateGPT.py to query your documents")
+        return 'Document processed successfully'
+    except Exception as e:
+        print(f"Error processing document: {e}")
+        return 'Error processing document'
+
+@app.route('/lets-qa')
+def lets_qa():
+    return render_template('lets_qa.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

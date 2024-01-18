@@ -6,12 +6,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF File Selector</title>
     <style>
+        body {
+            background-color: #111;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+
         #drop-area {
-            border: 2px dashed #ccc;
+            border: 2px dashed #4CAF50;
             border-radius: 8px;
             padding: 20px;
             text-align: center;
             cursor: pointer;
+            background-color: #222;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        #drop-area p {
+            margin: 0;
+            font-size: 18px;
+            color: #4CAF50;
+        }
+
+        #drop-area input {
+            display: none;
+        }
+
+        #drop-area:hover {
+            border: 2px dashed #00FF00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+        }
+
+        #drop-area:active {
+            border: 2px dashed #4CAF50;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        #ask-doc-btn {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #loading-bar {
+            display: none;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -19,21 +73,25 @@
 
 <div id="drop-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
     <p>Drag and drop a PDF file here or click to select one.</p>
-    <input type="file" id="file-input" style="display: none;" onchange="handleFile(this.files)">
+    <input type="file" id="file-input" onchange="handleFile(this.files)">
 </div>
-
+<button id="ask-doc-btn" onclick="askTheDoc()">Ask the Doc</button>
+<div id="loading-bar">Studying the document. May take time...</div>
 <script>
     function dragOverHandler(event) {
         event.preventDefault();
-        document.getElementById('drop-area').style.border = '2px dashed #000';
+        document.getElementById('drop-area').style.border = '2px dashed #4CAF50';
     }
 
     function dropHandler(event) {
         event.preventDefault();
-        document.getElementById('drop-area').style.border = '2px dashed #ccc';
+        document.getElementById('drop-area').style.border = '2px dashed #4CAF50';
 
         var files = event.dataTransfer.files;
         handleFile(files);
+
+        // Show "Ask the Doc" button after successful upload
+        document.getElementById('ask-doc-btn').style.display = 'block';
     }
 
     function handleFile(files) {
@@ -51,6 +109,26 @@
         .then(response => response.text())
         .then(message => alert(message))
         .catch(error => console.error('Error:', error));
+    }
+    function askTheDoc() {
+        // Show loading bar
+        document.getElementById('loading-bar').style.display = 'block';
+
+        // Call the Flask route/function for "Ask the Doc"
+        fetch('/ask-doc', {
+            method: 'GET'
+        })
+        .then(response => response.text())
+        .then(message => {
+            alert(message);
+            // Hide loading bar on completion
+            document.getElementById('loading-bar').style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Hide loading bar on error
+            document.getElementById('loading-bar').style.display = 'none';
+        });
     }
 </script>
 
