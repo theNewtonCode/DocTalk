@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF File Selector</title>
+    <style>
+        #drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="drop-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+    <p>Drag and drop a PDF file here or click to select one.</p>
+    <input type="file" id="file-input" style="display: none;" onchange="handleFile(this.files)">
+</div>
+
+<script>
+    function dragOverHandler(event) {
+        event.preventDefault();
+        document.getElementById('drop-area').style.border = '2px dashed #000';
+    }
+
+    function dropHandler(event) {
+        event.preventDefault();
+        document.getElementById('drop-area').style.border = '2px dashed #ccc';
+
+        var files = event.dataTransfer.files;
+        handleFile(files);
+    }
+
+    function handleFile(files) {
+        var fileInput = document.getElementById('file-input');
+        fileInput.files = files;
+
+        // Submit the form to the Flask endpoint
+        var formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        fetch('/upload', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(message => alert(message))
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+
+</body>
+</html>

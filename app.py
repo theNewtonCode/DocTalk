@@ -1,89 +1,54 @@
 import os
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM 
-from transformers import pipeline
-import torch 
-from langchain.document_loaders import PyPDFLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter 
-from langchain.embeddings import SentenceTransformerEmbeddings 
-from langchain.vectorstores import Chroma 
-from langchain.llms import HuggingFacePipeline
-from langchain.chains import RetrievalQA 
+import shutil
+from flask import Flask, render_template, request
 
+app = Flask(__name__)
 
-device = torch.device('cpu')
+@app.route('/')
+def index():
+    return render_template('index.html')
 
-checkpoint = "LaMini-T5-738M"
+@app.route('/upload', methods=['POST'])
+def upload():
+    if 'file' not in request.files:
+        return 'No file part'
 
-print(f"Checkpoint path: {checkpoint}")  
-tokenizer = AutoTokenizer.from_pretrained(checkpoint)
-base_model = AutoModelForSeq2SeqLM.from_pretrained(
-    checkpoint,
-    torch_dtype=torch.float32
-)
+    file = request.files['file']
 
-def data_ingestion2():
-    for root, dirs, files in os.walk("docs"):
-        for file in files:
-            if file.endswith(".pdf"):
-                print(file)
-                loader = PyPDFLoader(os.path.join(root, file))
-    documents = loader.load()
-    print("splitting into chunks")
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
-    texts = text_splitter.split_documents(documents)
-    #create embeddings here
-    print("Loading sentence transformers model")
-    embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-    #create vector store here
-    print(f"Creating embeddings. May take some minutes...")
+    if file.filename == '':
+        return 'No selected file'
 
-    db = Chroma.from_documents(texts, embeddings, persist_directory="vector_db_main")
-    # print(type(db))
-    # query = "What is the EconVisor's motivation is deeply rooted in?"
-    # docs = db.similarity_search(query)
-    # print(docs[0].page_content)
+    if file and file.filename.endswith('.pdf'):
+        # Remove existing files from the 'docs' folder
+        docs_folder = 'docs'
+        for existing_file in os.listdir(docs_folder):
+            existing_file_path = os.path.join(docs_folder, existing_file)
+            try:
+                if os.path.isfile(existing_file_path) or os.path.islink(existing_file_path):
+                    os.unlink(existing_file_path)
+                elif os.path.isdir(existing_file_path):
+                    shutil.rmtree(existing_file_path)
+            except Exception as e:
+                print(f"Failed to delete {existing_file_path}. Reason: {e}")
 
-    print(f"Ingestion complete! You can now run privateGPT.py to query your documents")
+        # Remove the contents of the 'vector_db_main' folder
+        vector_db_main_folder = 'vector_db_main'
+        for filename in os.listdir(vector_db_main_folder):
+            file_path = os.path.join(vector_db_main_folder, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print(f"Failed to delete {file_path}. Reason: {e}")
 
-def llm_pipeline():
-    pipe = pipeline(
-        'text2text-generation',
-        model = base_model,
-        tokenizer = tokenizer,
-        max_length = 256,
-        do_sample = True,
-        temperature = 0.3,
-        top_p= 0.95,
-        device=device
-    )
-    local_llm = HuggingFacePipeline(pipeline=pipe)
-    return local_llm
+        # Save the file to the 'docs' folder
+        file_path = os.path.join(docs_folder, file.filename)
+        file.save(file_path)
+        return 'File uploaded successfully'
+    else:
+        return 'Invalid file format. Please upload a PDF file.'
 
-
-def qa_llm():
-    llm = llm_pipeline()
-    embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-    db = Chroma(persist_directory="vector_db_main", embedding_function = embeddings)
-    retriever = db.as_retriever()
-    qa = RetrievalQA.from_chain_type(
-        llm = llm,
-        chain_type = "stuff",
-        retriever = retriever,
-        return_source_documents=True
-    )
-    return qa
-
-def process_answer(instruction):
-    instruction = instruction
-    qa = qa_llm()
-    generated_text = qa(instruction)
-    answer = generated_text['result']
-    return answer
-
-def main():
-    # data_ingestion2()
-    print(process_answer("What is the EconVisor's motivation is deeply rooted in?"))
-
-if __name__ == "__main__":
-    main()
-
+if __name__ == '__main__':
+    app.run(debug=True)
