@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocTalk Home Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='./styles/index.css') }}">
+    <script src="{{ url_for('static', filename='scripts/index.js') }}"></script>
+
+</head>
+<body>
+    <img src="../static/logoimage.png" alt="DocTalk Logo">
+    <div class="typing">
+        <p class="line-1 anim-typewriter">Your ultimate Document Chat Machine...</p>
+    </div>
+<div id="drop-area" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+    <p>Drag and drop a PDF file here or click to select one.</p>
+    <input type="file" id="file-input" onchange="handleFile(this.files)">
+</div>
+<button id="ask-doc-btn" onclick="askTheDoc()">Learn</button>
+<button id="lets-qa-btn" onclick="navigateToLetsQA()">Start QA</button>
+<button id="try-new-btn" onclick="tryNewDoc()">New Doc?</button>
+<div id="loading-bar">Studying the document. May take time...</div>
+
+<div class="footer">
+    Crafted with passion by Abhyuday | DocTalk AI © 2024
+</div>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+body {
+    background-image: url("../bookcase.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    /* background-color: #111; */
+    color: #fff;
+    font-family: 'Futura', sans-serif;;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    backdrop-filter: blur(1px);
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    /* Translucent dark filter */
+    z-index: -1;
+}
+
+#drop-area {
+    margin-top: 30px;
+    border: 2px dashed #4CAF50;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    padding: 50px;
+    cursor: pointer;
+    background-color: #7bff1230;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+#drop-area p {
+    margin: 0;
+    font-size: 18px;
+    color: #ffffff85;
+}
+
+#drop-area input {
+    display: none;
+}
+
+#drop-area:hover {
+    border: 2px dashed #00FF00;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+}
+
+#drop-area:active {
+    border: 2px dashed #4CAF50;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+}
+
+#ask-doc-btn,
+#lets-qa-btn,
+#try-new-btn {
+    display: none;
+    padding: 10px 20px;
+    background-color: #1ab036ba;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    width: 150px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Added transform transition */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    margin-top: 15px;
+}
+#try-new-btn{
+    background-color: #1c95c7b8;
+}
+
+#ask-doc-btn:hover,
+#lets-qa-btn:hover {
+    background-color: #1ab036ba; /* Adjust color for hover state */
+    transform: scale(1.1); /* Increase size on hover (1.1 means 110% of original size) */
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(11, 255, 27, 0.8), /* Glow effect */
+    0 0 10px rgba(0, 0, 0, 0.3);
+}
+#try-new-btn:hover {
+    background-color: #1c95c7b8; /* Adjust color for hover state */
+    transform: scale(1.1); /* Increase size on hover (1.1 means 110% of original size) */
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(19, 166, 206, 0.8), /* Glow effect */
+    0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+
+#loading-bar {
+    display: none;
+    background-color: #35c43a95;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+img {
+    height: 200px;
+    margin: 100px 0px 40px 0px;
+}
+
+.line-1{
+    position: relative;
+    top: 50%;  
+    width: auto;
+    margin: 0 auto;
+    border-right: 2px solid rgba(255,255,255,.75);
+    font-size: 180%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    transform: translateY(-50%);    
+    font-family: monospace;
+    color: #c6c6c6ca;
+}
+
+/* Animation */
+.anim-typewriter{
+  animation: typewriter 4s steps(44) 1s 1 normal both,
+             blinkTextCursor 500ms steps(44) infinite normal;
+}
+@keyframes typewriter{
+  from{width: 0;}
+  to{width: 100%;}
+}
+@keyframes blinkTextCursor{
+  from{border-right-color: rgba(255,255,255,.75);}
+  to{border-right-color: transparent;}
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    margin-bottom:
+        25px;
+    font-size: 16px;
+    color: #ffffff;
+}
