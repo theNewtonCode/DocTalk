@@ -49,11 +49,21 @@
             box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
         }
 
-        #ask-doc-btn {
+        #ask-doc-btn, #lets-qa-btn {
             display: none;
             margin-top: 20px;
             padding: 10px;
             background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #try-new-btn {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #ff00d0;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -76,7 +86,10 @@
     <input type="file" id="file-input" onchange="handleFile(this.files)">
 </div>
 <button id="ask-doc-btn" onclick="askTheDoc()">Ask the Doc</button>
+<button id="lets-qa-btn" onclick="navigateToLetsQA()">Let's QA</button>
+<button id="try-new-btn" onclick="tryNewDoc()">New Doc?</button>
 <div id="loading-bar">Studying the document. May take time...</div>
+
 <script>
     function dragOverHandler(event) {
         event.preventDefault();
@@ -92,6 +105,8 @@
 
         // Show "Ask the Doc" button after successful upload
         document.getElementById('ask-doc-btn').style.display = 'block';
+        document.getElementById('try-new-btn').style.display = 'block';
+
     }
 
     function handleFile(files) {
@@ -110,6 +125,23 @@
         .then(message => alert(message))
         .catch(error => console.error('Error:', error));
     }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const completed = urlParams.get('completed');
+
+    if (completed === 'true') {
+        // If 'completed' is true, hide the "Ask the Doc" button and show the "Let's QA" button
+        document.getElementById('ask-doc-btn').style.display = 'none';
+        document.getElementById('lets-qa-btn').style.display = 'block';
+        document.getElementById('try-new-btn').style.display = 'block';
+    } else {
+        // If 'completed' is not present or false, show the "Ask the Doc" button
+        // document.getElementById('ask-doc-btn').style.display = 'block';
+        document.getElementById('lets-qa-btn').style.display = 'none';
+        document.getElementById('try-new-btn').style.display = 'none';
+
+    }
+
     function askTheDoc() {
         // Show loading bar
         document.getElementById('loading-bar').style.display = 'block';
@@ -123,6 +155,13 @@
             alert(message);
             // Hide loading bar on completion
             document.getElementById('loading-bar').style.display = 'none';
+
+            // Update the URL to include 'completed=true'
+            window.history.replaceState({}, document.title, "/?completed=true");
+
+            // Hide "Ask the Doc" button and show "Let's QA" button
+            document.getElementById('ask-doc-btn').style.display = 'none';
+            document.getElementById('lets-qa-btn').style.display = 'block';
         })
         .catch(error => {
             console.error('Error:', error);
@@ -130,6 +169,17 @@
             document.getElementById('loading-bar').style.display = 'none';
         });
     }
+
+    function navigateToLetsQA() {
+        // Redirect to the "/lets-qa" route
+        window.location.href = '/lets-qa';
+    }
+
+    function tryNewDoc() {
+        // Clear all search parameters and redirect to 'index.html'
+        window.location.href = '/';
+    }
+
 </script>
 
 </body>

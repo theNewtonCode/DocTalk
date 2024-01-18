@@ -10,7 +10,7 @@ from langchain.embeddings import SentenceTransformerEmbeddings
 from langchain.vectorstores import Chroma 
 from langchain.llms import HuggingFacePipeline
 from langchain.chains import RetrievalQA 
-
+from qa_app import process_answer
 
 
 app = Flask(__name__)
@@ -100,9 +100,16 @@ def ask_doc():
         print(f"Error processing document: {e}")
         return 'Error processing document'
 
-@app.route('/lets-qa')
+
+@app.route('/lets-qa', methods=['POST', 'GET'])
 def lets_qa():
-    return render_template('lets_qa.html')
+    if request.method == 'POST':
+        question = request.form['question']
+        answer = process_answer(question)
+        return render_template('lets_qa.html', question=question, answer=answer)
+    else:
+        return render_template('lets_qa.html', question="", answer="")
+
 
 if __name__ == '__main__':
     app.run(debug=True)

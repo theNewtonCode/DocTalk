@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Page</title>
+    <!-- Add your CSS styles here -->
+</head>
+<body>
+
+<div style="max-width: 600px; margin: auto;">
+    <h1>Chat with the QA Bot</h1>
+    
+    <form method="POST" action="/lets-qa">
+        <label for="question">Your Question:</label>
+        <input type="text" id="question" name="question" value="{{ question }}" required>
+        <button type="submit">Ask</button>
+    </form>
+
+    {% if question %}
+        <p><strong>Your Question:</strong> {{ question }}</p>
+        <p><strong>Answer:</strong> {{ answer }}</p>
+    {% endif %}
+
+</div>
+
+<!-- Add your additional HTML content or scripts here -->
+
+</body>
+</html>
