@@ -11,6 +11,7 @@ from langchain.vectorstores import Chroma
 from langchain.llms import HuggingFacePipeline
 from langchain.chains import RetrievalQA 
 from qa_app import process_answer
+import random
 
 
 app = Flask(__name__)
@@ -20,12 +21,12 @@ device = torch.device('cpu')
 
 checkpoint = "LaMini-T5-738M"
 
-print(f"Checkpoint path: {checkpoint}")  
-tokenizer = AutoTokenizer.from_pretrained(checkpoint)
-base_model = AutoModelForSeq2SeqLM.from_pretrained(
-    checkpoint,
-    torch_dtype=torch.float32
-)
+# print(f"Checkpoint path: {checkpoint}")  
+# tokenizer = AutoTokenizer.from_pretrained(checkpoint)
+# base_model = AutoModelForSeq2SeqLM.from_pretrained(
+#     checkpoint,
+#     torch_dtype=torch.float32
+# )
 
 
 @app.route('/')
@@ -106,6 +107,18 @@ def lets_qa():
     if request.method == 'POST':
         question = request.form['question']
         answer = process_answer(question)
+
+
+        # Define a list of alternative texts
+        alternative_texts = [
+            "Happy to assist! Let me know if you have any other questions. 😊",
+            "My pleasure! I hope the information I provided was insightful. 😉",
+            "That's just a starting point! Ask more to learn more about this topic. 😙"
+        ]
+
+        random_text = random.choice(alternative_texts)
+        answer = "Here is the information you requested. "+ answer + " " + random_text
+
         return render_template('lets_qa.html', question=question, answer=answer)
     else:
         return render_template('lets_qa.html', question="", answer="")

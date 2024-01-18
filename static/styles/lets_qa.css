@@ -1,0 +1,152 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(45deg, #ff00ff, #00ff00, #0000ff, #ff00ff);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+#container {
+    max-width: 800px;
+    min-width: 500px;
+    text-align: center;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    font-size: 3.5em;
+    margin-bottom: 20px;
+    color: #1cb6c7;
+    text-shadow: 2px 2px 4px rgba(28, 182, 199, 0.8);
+    font-family: 'Roboto', sans-serif; 
+}
+
+form {
+    margin-top: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    color: #31d81eeb;
+    font-size: larger;
+    font-family: monospace;
+}
+
+input {
+    width: 90%;
+    padding: 16px;
+    margin-bottom: 20px;
+    background-color: #06634bad;
+    border: none;
+    border-radius: 5px;
+    color: #ffffffc7;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    font-size: 18px;
+}
+
+.log_img button {
+    padding: 10px 20px;
+    background-color: #1cb6c7;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+
+/* CSS */
+.button-64 {
+align-items: center;
+background-image: linear-gradient(144deg, #40bf80, #0080ff 50%, #40bf80);
+border: 0;
+border-radius: 8px;
+box-shadow: rgba(151, 65, 252, 0.2) 0 15px 30px -5px;
+box-sizing: border-box;
+color: #FFFFFF;
+display: flex;
+font-family: Phantomsans, sans-serif;
+font-size: 20px;
+justify-content: center;
+line-height: 1em;
+padding: 3px;
+text-decoration: none;
+user-select: none;
+-webkit-user-select: none;
+touch-action: manipulation;
+white-space: nowrap;
+cursor: pointer;
+margin: auto;
+}
+
+.button-64:active,
+.button-64:hover {
+outline: 0;
+}
+
+.button-64 span {
+background-color: rgb(5, 6, 45);
+padding: 11px 38px;
+border-radius: 6px;
+height: 100%;
+transition: 300ms;
+}
+
+.button-64:hover span {
+background: none;
+}
+
+@media (min-width: 768px) {
+.button-64 {
+font-size: 24px;
+min-width: 126px;
+}
+}
+
+p {
+    margin-top: 20px;
+    color: #ffffff;
+    text-align: left; 
+    font-family: 'Futura', sans-serif;
+}
+
+strong {
+    color: #1cb6c7;
+}
+img{
+    height: 200px;
+
+}
+.log_img{
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+}
+.log_img button{
+    margin: 20px;
+
+}

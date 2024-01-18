@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Page</title>
-    <!-- Add your CSS styles here -->
+    <title>DocTalk - Ask your question about the content in your document!</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='./styles/lets_qa.css') }}">
 </head>
 <body>
-
-<div style="max-width: 600px; margin: auto;">
-    <h1>Chat with the QA Bot</h1>
-    
+    <div class="log_img"><button type="button" onclick="tryNewDoc()"><span class="text">Home</span></button></div>
+<div id="container">
+    <img src="../static/logoimage.png" alt="DocTalk Logo">
     <form method="POST" action="/lets-qa">
         <label for="question">Your Question:</label>
-        <input type="text" id="question" name="question" value="{{ question }}" required>
-        <button type="submit">Ask</button>
+        <input type="text" id="question" name="question" value="{{ question }}" placeholder="Type your question" required>
+        <button class="button-64" type="submit"><span class="text">Ask</span></button>
     </form>
 
     {% if question %}
         <p><strong>Your Question:</strong> {{ question }}</p>
         <p><strong>Answer:</strong> {{ answer }}</p>
     {% endif %}
-
 </div>
-
-<!-- Add your additional HTML content or scripts here -->
-
 </body>
+<script>
+    function tryNewDoc() {
+    // Clear all search parameters and redirect to 'index.html'
+    window.location.href = '/';
+}
+</script>
 </html>
