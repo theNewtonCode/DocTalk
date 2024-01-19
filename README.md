@@ -48,7 +48,7 @@ To run the application:
 1. Create a virtual environment for better isolation.
 2. Clone the repository: `git clone https://github.com/theNewtonCode/DocTalk.git`.
 3. Install necessary libraries from `requirements.txt`.
-4. Create an empty folder named `vector_db_main` in the project directory.
+4. Create two empty folders named `docs` and `vector_db_main` in the project directory.
 5. Download the LaMini model using Git LFS commands:
    ```bash
    git lfs install
